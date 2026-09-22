@@ -1,0 +1,66 @@
+version: "0.1"
+system: WSP-001
+assets:
+  - {id: TK-001, type: tank, name: Supply Tank}
+  - {id: FM-001, type: flow_meter, name: Makeup Water Flow Meter}
+  - {id: MV-001, type: control_valve, name: Makeup Water Control Valve}
+  - {id: LT-001, type: level_transmitter, name: Tank Level Transmitter}
+  - {id: XV-002, type: isolation_valve, name: Tank Outlet Isolation Valve}
+  - {id: DV-001, type: drain_valve, name: Tank Drain Valve}
+  - {id: SH-001, type: header, name: Common Suction Header}
+  - {id: DH-001, type: header, name: Common Discharge Header}
+  - {id: PT-001, type: pressure_transmitter, name: Header Pressure Transmitter}
+  - {id: FT-001, type: flow_transmitter, name: Header Flow Transmitter}
+  - {id: PIC-001, type: pressure_controller, name: Header Pressure Controller}
+  - {id: EM-001, type: energy_meter, name: Pump System Energy Meter}
+  - {id: LOAD-001, type: variable_load, name: Process and Utility Users}
+  - {id: XV-101-S, type: isolation_valve, name: P-101 Suction Isolation Valve}
+  - {id: ST-101, type: strainer, name: P-101 Suction Strainer}
+  - {id: DPT-101, type: differential_pressure_transmitter, name: ST-101 Differential Pressure Transmitter}
+  - {id: PS-101, type: pressure_transmitter, name: P-101 Suction Pressure Transmitter}
+  - {id: P-101, type: pump_package, name: Centrifugal Pump Motor VSD Package 101, motor_kw: 30}
+  - {id: PD-101, type: pressure_transmitter, name: P-101 Discharge Pressure Transmitter}
+  - {id: VT-101, type: vibration_transmitter, name: P-101 Vibration Sensor}
+  - {id: NRV-101, type: non_return_valve, name: P-101 Discharge Non-Return Valve}
+  - {id: XV-101-D, type: isolation_valve, name: P-101 Discharge Isolation Valve}
+  - {id: EM-101, type: energy_channel, name: P-101 Electrical Energy Channel}
+  - {id: XV-102-S, type: isolation_valve, name: P-102 Suction Isolation Valve}
+  - {id: ST-102, type: strainer, name: P-102 Suction Strainer}
+  - {id: DPT-102, type: differential_pressure_transmitter, name: ST-102 Differential Pressure Transmitter}
+  - {id: PS-102, type: pressure_transmitter, name: P-102 Suction Pressure Transmitter}
+  - {id: P-102, type: pump_package, name: Centrifugal Pump Motor VSD Package 102, motor_kw: 30}
+  - {id: PD-102, type: pressure_transmitter, name: P-102 Discharge Pressure Transmitter}
+  - {id: VT-102, type: vibration_transmitter, name: P-102 Vibration Sensor}
+  - {id: NRV-102, type: non_return_valve, name: P-102 Discharge Non-Return Valve}
+  - {id: XV-102-D, type: isolation_valve, name: P-102 Discharge Isolation Valve}
+  - {id: EM-102, type: energy_channel, name: P-102 Electrical Energy Channel}
+  - {id: XV-103-S, type: isolation_valve, name: P-103 Suction Isolation Valve}
+  - {id: ST-103, type: strainer, name: P-103 Suction Strainer}
+  - {id: DPT-103, type: differential_pressure_transmitter, name: ST-103 Differential Pressure Transmitter}
+  - {id: PS-103, type: pressure_transmitter, name: P-103 Suction Pressure Transmitter}
+  - {id: P-103, type: pump_package, name: Centrifugal Pump Motor VSD Package 103, motor_kw: 30}
+  - {id: PD-103, type: pressure_transmitter, name: P-103 Discharge Pressure Transmitter}
+  - {id: VT-103, type: vibration_transmitter, name: P-103 Vibration Sensor}
+  - {id: NRV-103, type: non_return_valve, name: P-103 Discharge Non-Return Valve}
+  - {id: XV-103-D, type: isolation_valve, name: P-103 Discharge Isolation Valve}
+  - {id: EM-103, type: energy_channel, name: P-103 Electrical Energy Channel}
+  - {id: XV-104-S, type: isolation_valve, name: P-104 Suction Isolation Valve}
+  - {id: ST-104, type: strainer, name: P-104 Suction Strainer}
+  - {id: DPT-104, type: differential_pressure_transmitter, name: ST-104 Differential Pressure Transmitter}
+  - {id: PS-104, type: pressure_transmitter, name: P-104 Suction Pressure Transmitter}
+  - {id: P-104, type: pump_package, name: Centrifugal Pump Motor VSD Package 104, motor_kw: 30}
+  - {id: PD-104, type: pressure_transmitter, name: P-104 Discharge Pressure Transmitter}
+  - {id: VT-104, type: vibration_transmitter, name: P-104 Vibration Sensor}
+  - {id: NRV-104, type: non_return_valve, name: P-104 Discharge Non-Return Valve}
+  - {id: XV-104-D, type: isolation_valve, name: P-104 Discharge Isolation Valve}
+  - {id: EM-104, type: energy_channel, name: P-104 Electrical Energy Channel}
+  - {id: XV-105-S, type: isolation_valve, name: P-105 Suction Isolation Valve}
+  - {id: ST-105, type: strainer, name: P-105 Suction Strainer}
+  - {id: DPT-105, type: differential_pressure_transmitter, name: ST-105 Differential Pressure Transmitter}
+  - {id: PS-105, type: pressure_transmitter, name: P-105 Suction Pressure Transmitter}
+  - {id: P-105, type: pump_package, name: Centrifugal Pump Motor VSD Package 105, motor_kw: 30}
+  - {id: PD-105, type: pressure_transmitter, name: P-105 Discharge Pressure Transmitter}
+  - {id: VT-105, type: vibration_transmitter, name: P-105 Vibration Sensor}
+  - {id: NRV-105, type: non_return_valve, name: P-105 Discharge Non-Return Valve}
+  - {id: XV-105-D, type: isolation_valve, name: P-105 Discharge Isolation Valve}
+  - {id: EM-105, type: energy_channel, name: P-105 Electrical Energy Channel}
