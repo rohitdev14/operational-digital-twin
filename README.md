@@ -1,6 +1,6 @@
 # Operational Digital Twin
 
-[![Day 1 validation](https://github.com/rohitdev14/operational-digital-twin/actions/workflows/validate.yml/badge.svg)](https://github.com/rohitdev14/operational-digital-twin/actions/workflows/validate.yml)
+[![Digital twin validation](https://github.com/rohitdev14/operational-digital-twin/actions/workflows/validate.yml/badge.svg)](https://github.com/rohitdev14/operational-digital-twin/actions/workflows/validate.yml)
 
 Building a machine-readable engineering representation of a centrifugal pump system from first principles.
 
@@ -55,7 +55,7 @@ python knowledge/query.py
 pytest -q
 ```
 
-The current validation suite contains **8 tests**. The same suite is run automatically by GitHub Actions.
+The validation suite covers both the knowledge layer and behaviour model. The same suite is run automatically by GitHub Actions.
 
 ## Scope boundary
 
