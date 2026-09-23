@@ -28,3 +28,22 @@ def test_cable_fault_has_no_vibration_precursor():
 def test_trip_causal_histories_are_distinct():
     r=simulate_failures()
     assert at(r,120,"P-101")["failure_cause"] != at(r,240,"P-102")["failure_cause"]
+
+
+def test_energy_accounting_is_positive_and_cumulative():
+    r=simulate_failures()
+    a=at(r,0); b=at(r,479)
+    assert a["system_electrical_power_kw"] > 0
+    assert b["cumulative_energy_kwh"] > a["cumulative_energy_kwh"]
+    assert b["cumulative_delivered_volume_m3"] > a["cumulative_delivered_volume_m3"]
+
+def test_specific_energy_is_computable_for_each_operating_state():
+    r=simulate_failures()
+    for t in (0,120,240,360):
+        x=at(r,t)
+        assert x["specific_energy_kwh_m3"] > 0
+
+def test_tripped_pump_has_zero_electrical_input_power():
+    r=simulate_failures()
+    assert at(r,120,"P-101")["electrical_input_power_kw"] == 0
+    assert at(r,240,"P-102")["electrical_input_power_kw"] == 0
