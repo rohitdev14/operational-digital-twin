@@ -167,7 +167,6 @@ The project has progressed from a machine-readable plant description to a determ
 
 Day 3 is intentionally separated from the deterministic Day-2 ground truth. Planned work will evaluate evidence-based maintenance reasoning and operational/energy optimization without allowing AI-generated recommendations to silently become control commands.
 
-No PLC implementation is part of the current three-day build. PLC/control-engineering preparation and virtual commissioning are planned as a subsequent project after Day 3.
 
 ---
 
