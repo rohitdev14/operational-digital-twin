@@ -1,0 +1,37 @@
+version: "0.1"
+dataset: day2_failure_telemetry
+storage_policy:
+  telemetry: time_series_csv
+  graph: event_and_evidence_references
+events:
+  - id: EVT-001
+    scenario: S1_P101_BEARING_VSD_TRIP
+    asset: P-101
+    event_type: pump_trip
+    mechanism: bearing_failure_vsd_overload
+    evidence:
+      - VT-101 increasing vibration before trip
+      - EM-101 increasing load/current proxy before trip
+      - VSD overload trip code at t=120 s
+    consequence: pump_unavailable
+    telemetry_window_s: [90, 239]
+  - id: EVT-002
+    scenario: S2_P102_CABLE_TRIP
+    asset: P-102
+    event_type: pump_trip
+    mechanism: cable_electrical_fault
+    evidence:
+      - electrical load/current proxy excursion before trip
+      - no preceding vibration rise
+      - electrical fault trip code at t=240 s
+    consequence: pump_unavailable
+    telemetry_window_s: [235, 359]
+  - id: EVT-003
+    scenario: S3_THIRD_PUMP_TRIP_CAPACITY_DEFICIT
+    asset: P-103
+    event_type: pump_trip
+    mechanism: generic_resilience_test_trip
+    evidence:
+      - resilience-test trip code at t=360 s
+    consequence: system_capacity_deficit
+    telemetry_window_s: [360, 479]
