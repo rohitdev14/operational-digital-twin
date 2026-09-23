@@ -4,6 +4,7 @@ Conceptual synthetic data only. Energy values are model-derived, not vendor data
 """
 import csv
 from pathlib import Path
+from datetime import datetime, timezone, timedelta
 from .capacity import BASELINE_FLOW_M3H, SETPOINT_HEAD_M, capacity_point
 from .physics import PumpModel
 
@@ -24,8 +25,10 @@ def failure_cause(pump,t):
     if pump=="P-103" and t>=360: return "generic_trip_for_resilience_test"
     return ""
 
-def simulate_failures(duration_s=480):
+def simulate_failures(duration_s=480, run_id="DT-PD-STEP1B-001", start_utc=None):
+    """Generate deterministic telemetry with cross-project traceability metadata."""
     pump=PumpModel(); rows=[]; cumulative_kwh=0.0; cumulative_volume_m3=0.0
+    start_utc = start_utc or datetime.now(timezone.utc)
     for t in range(duration_s):
         scenario,failed=scenario_at(t); available=5-len(failed)
         cap=capacity_point(available)
@@ -43,7 +46,10 @@ def simulate_failures(duration_s=480):
         cumulative_kwh+=step_kwh; cumulative_volume_m3+=step_volume_m3
         sec=system_electrical_kw/delivered if delivered>0 else 0.0
         cumulative_sec=cumulative_kwh/cumulative_volume_m3 if cumulative_volume_m3>0 else 0.0
-        common={"t_s":t,"scenario":scenario,"demand_m3h":BASELINE_FLOW_M3H,
+        timestamp_utc=(start_utc+timedelta(seconds=t)).isoformat().replace("+00:00","Z")
+        common={"timestamp_utc":timestamp_utc,"run_id":run_id,
+                "source":"operational-digital-twin","t_s":t,
+                "scenario":scenario,"demand_m3h":BASELINE_FLOW_M3H,
                 "delivered_flow_m3h":round(delivered,3),"flow_deficit_m3h":round(deficit,3),
                 "header_head_m":round(head,3),"setpoint_head_m":SETPOINT_HEAD_M,
                 "common_speed_ref_pu":round(speed,5),"pumps_available":available,
