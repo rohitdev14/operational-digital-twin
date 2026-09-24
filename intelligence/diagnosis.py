@@ -8,7 +8,10 @@ def diagnose(e):
     electrical_trip=e["trip_code"]=="ELECTRICAL_FAULT"
 
     mech_score=sum([vib_rise,load_rise,overload])
-    elec_score=sum([electrical_trip,load_rise,not vib_rise])
+    # Absence of vibration can support an electrical path only when positive
+    # electrical evidence also exists; absence alone must never create a cause.
+    electrical_positive=electric_trip_or_load = electrical_trip or load_rise
+    elec_score=(int(electrical_trip)+int(load_rise)+int(not vib_rise)) if electrical_positive else 0
     if mech_score:
         hypotheses.append({"hypothesis":"mechanical_load_or_bearing_degradation","score":mech_score,
           "supports":[x for x,b in [("vibration increased before trip",vib_rise),("electrical load increased",load_rise),("VSD overload trip recorded",overload)] if b],
