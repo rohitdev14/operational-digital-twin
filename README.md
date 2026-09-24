@@ -167,6 +167,12 @@ The project has progressed from a machine-readable plant description to a determ
 
 Use Day-2 telemetry as observable evidence, keep injected failure labels hidden, and test whether the twin can produce transparent diagnostic hypotheses, verification checks and operational decision support.
 
+### Where Day 3 started
+
+At the end of Day 2 the twin could describe the plant, calculate its expected hydraulic behaviour, simulate progressive loss of pumping capacity, generate synthetic condition/energy telemetry and preserve known injected events. It could answer **what happened operationally**, but it did not independently interpret an unknown event or explain which observations supported a maintenance hypothesis.
+
+Day 3 therefore started with a deliberate separation between **observable evidence** and **experiment ground truth**. The injected `failure_cause` and `scenario` fields remain available for validation, but are not diagnostic inputs.
+
 ### Day 3 achievements
 
 #### 1. Evidence engine
@@ -175,14 +181,16 @@ Use Day-2 telemetry as observable evidence, keep injected failure labels hidden,
 - Explicitly removes injected `failure_cause` and `scenario` from the diagnostic view.
 
 #### 2. Transparent diagnostic reasoning
-- Added deterministic evidence scoring in `intelligence/diagnosis.py`; no LLM is required.
+- Added deterministic, inspectable evidence scoring in `intelligence/diagnosis.py`.
 - P-101's synthetic rising-vibration + rising-load + VSD-overload evidence follows a mechanical-load/bearing-degradation hypothesis path.
 - P-102's electrical excursion + electrical-fault trip + no material vibration rise follows an electrical-supply/cable hypothesis path.
 - P-103 has insufficient condition evidence for a cause diagnosis, so the engine reports the capacity consequence without inventing a cause.
+- Absence of a signal by itself is not allowed to create a fault hypothesis; positive supporting evidence is required.
 
 #### 3. Maintenance verification support
 - Added `knowledge/failure_modes.yaml` and `intelligence/maintenance.py`.
 - Leading hypotheses produce explicit verification checks and missing-evidence requirements rather than automatic maintenance commands.
+- The output separates observed evidence, hypothesis and required engineering verification.
 
 #### 4. Operational and energy intelligence
 - Added `intelligence/operations.py` to compare 5-, 4-, 3- and 2-pump configurations.
@@ -199,13 +207,63 @@ Automated tests verify distinct diagnostic paths, insufficient-evidence behaviou
 
 `intelligence/report.py` generates a deterministic Day-3 diagnostic/operational report from the Day-2 telemetry.
 
-### Day 3 outcome
+### Where the three-day build ended
 
-The prototype now progresses through three explicit layers:
+The repository now contains an end-to-end, deterministic operational digital-twin reference model:
+
+`P&ID / system definition → machine-readable assets and relationships → first-principles pump behaviour → synthetic telemetry → resilience and energy calculations → event evidence → diagnostic hypotheses → engineering verification → operational comparison`
+
+The progression is:
 
 **Day 1 — What is the plant?**  
 **Day 2 — How does it behave?**  
 **Day 3 — Why might it be behaving this way, what evidence supports that hypothesis, and what should be verified next?**
+
+### Model capability
+
+Within its frozen conceptual assumptions, the model can:
+
+- represent a five-pump parallel water-supply system as queryable engineering assets and relationships;
+- calculate pump/head/flow behaviour and VSD-speed requirements from first-principles equations;
+- evaluate whether 5, 4, 3 or 2 available pumps can sustain the baseline hydraulic duty;
+- generate reproducible synthetic operating, condition and energy telemetry;
+- inject controlled fault/resilience scenarios while retaining hidden experiment ground truth;
+- reconstruct evidence around an event without exposing its injected cause;
+- distinguish the two implemented synthetic evidence patterns and refuse to invent a cause when evidence is insufficient;
+- identify the hydraulic consequence and remaining capacity after equipment loss;
+- produce engineering verification checks from explicit failure-mode knowledge;
+- compare feasible operating states using hydraulic service, capacity margin, estimated electrical power and specific energy;
+- generate deterministic reports and validate behaviour automatically in CI.
+
+### How engineers and researchers can use it
+
+The repository is intended as a transparent engineering study and simulation platform. It can be used to:
+
+- teach and study the connection between P&IDs, asset models, pump physics, telemetry, faults and operational decisions;
+- run repeatable what-if studies by changing demand, duty point, pump assumptions, availability or fault timing;
+- study redundancy and capacity margin under progressive equipment loss;
+- develop and test condition-monitoring or diagnostic logic against controlled synthetic evidence;
+- examine what additional instrumentation would be needed to discriminate between competing failure hypotheses;
+- study energy metrics and operating-state trade-offs before applying measured/vendor performance data;
+- prototype data contracts, event/evidence structures and deterministic engineering analytics;
+- compare analytical methods against a known simulated ground truth;
+- provide a software plant model that can later be adapted to real measured telemetry, provided the conceptual parameters and synthetic diagnostic assumptions are replaced and independently validated.
+
+### Real-life use boundary
+
+The repository is **not** a validated plant model, protection system, maintenance authority or control application. Applying the architecture to a real installation requires site-specific P&IDs and topology, actual pump/vendor curves, measured electrical performance, calibrated instrumentation, real protection logic, validated failure signatures, operating constraints and engineering review.
+
+The useful real-life pattern is therefore not to copy the current numerical assumptions. It is to reuse the architecture and replace the synthetic/reference inputs with validated engineering data.
+
+### Scope boundary — no generative-AI stack
+
+**LLMs, RAG, embeddings/vector databases, Neo4j and generative/autonomous AI agents are outside the scope of this Operational Digital Twin.**
+
+The operational-intelligence layer is intentionally based on:
+
+`explicit engineering knowledge + first-principles models + telemetry + deterministic evidence-based reasoning`
+
+The project does not require an LLM to function as a digital twin. The term **knowledge layer** in this repository describes structured engineering assets, relationships, events and failure-mode knowledge; it does not imply a graph database.
 
 Day 3 remains decision support. It does not validate real failure thresholds, autonomously perform maintenance, or send control commands.
 
