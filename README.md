@@ -14,7 +14,7 @@ The reference system is an open-loop water supply system with **5 × 30 kW VSD-d
 |---|---|---|
 | **Day 1 — Make the plant understandable** | What exists, how is it connected, and what measures it? | ✅ Complete / validated |
 | **Day 2 — Make the plant behave** | How should it behave physically, how resilient is it, and what operating evidence should we capture? | ✅ Complete / validated |
-| **Day 3 — Operational Intelligence** | Can the twin use evidence to explain deviations, support maintenance analysis and evaluate operating optimization? | ⏳ Not started |
+| **Day 3 — Operational Intelligence** | Can the twin use evidence to explain deviations, support maintenance analysis and evaluate operating optimization? | ✅ Complete / validated |
 
 ---
 
@@ -163,10 +163,53 @@ The project has progressed from a machine-readable plant description to a determ
 
 ## Day 3 — Operational Intelligence
 
-**Status: Not started.**
+### Objective
 
-Day 3 is intentionally separated from the deterministic Day-2 ground truth. Planned work will evaluate evidence-based maintenance reasoning and operational/energy optimization without allowing AI-generated recommendations to silently become control commands.
+Use Day-2 telemetry as observable evidence, keep injected failure labels hidden, and test whether the twin can produce transparent diagnostic hypotheses, verification checks and operational decision support.
 
+### Day 3 achievements
+
+#### 1. Evidence engine
+- Added `intelligence/evidence.py` to reconstruct pre/post-event evidence windows.
+- Extracts vibration/load trends, trip code, process demand and post-trip hydraulic consequence.
+- Explicitly removes injected `failure_cause` and `scenario` from the diagnostic view.
+
+#### 2. Transparent diagnostic reasoning
+- Added deterministic evidence scoring in `intelligence/diagnosis.py`; no LLM is required.
+- P-101's synthetic rising-vibration + rising-load + VSD-overload evidence follows a mechanical-load/bearing-degradation hypothesis path.
+- P-102's electrical excursion + electrical-fault trip + no material vibration rise follows an electrical-supply/cable hypothesis path.
+- P-103 has insufficient condition evidence for a cause diagnosis, so the engine reports the capacity consequence without inventing a cause.
+
+#### 3. Maintenance verification support
+- Added `knowledge/failure_modes.yaml` and `intelligence/maintenance.py`.
+- Leading hypotheses produce explicit verification checks and missing-evidence requirements rather than automatic maintenance commands.
+
+#### 4. Operational and energy intelligence
+- Added `intelligence/operations.py` to compare 5-, 4-, 3- and 2-pump configurations.
+- Comparison includes hydraulic feasibility, required speed, capacity margin, estimated electrical power, specific energy and remaining pump-count resilience.
+- Configurations that cannot meet the frozen **500 m³/h @ 38 mH₂O** duty are excluded from the feasible set.
+- Energy conclusions remain model-only because efficiency curves are conceptual assumptions.
+
+#### 5. Explainability and validation
+The Day-3 reasoning chain is deliberately inspectable:
+
+`OBSERVED → DERIVED → HYPOTHESIS → SUPPORTING EVIDENCE → MISSING EVIDENCE → SYSTEM CONSEQUENCE → VERIFICATION`
+
+Automated tests verify distinct diagnostic paths, insufficient-evidence behaviour, hydraulic feasibility and — critically — that diagnostic code does **not** consume the injected failure cause or scenario label.
+
+`intelligence/report.py` generates a deterministic Day-3 diagnostic/operational report from the Day-2 telemetry.
+
+### Day 3 outcome
+
+The prototype now progresses through three explicit layers:
+
+**Day 1 — What is the plant?**  
+**Day 2 — How does it behave?**  
+**Day 3 — Why might it be behaving this way, what evidence supports that hypothesis, and what should be verified next?**
+
+Day 3 remains decision support. It does not validate real failure thresholds, autonomously perform maintenance, or send control commands.
+
+**Day 3 operational-intelligence layer: complete and validated.**
 
 ---
 
@@ -178,14 +221,21 @@ Day 3 is intentionally separated from the deterministic Day-2 ground truth. Plan
 - `docs/day-2-failure-simulation.md` — failure experiment
 - `docs/day-2-data-contract.md` — Day-2 data and Day-3 boundary
 - `docs/day-2-energy-data.md` — energy-data prerequisites
+- `docs/day-3-operational-intelligence.md` — Day-3 architecture, reasoning and boundaries
 - `knowledge/assets.yaml` — asset registry
 - `knowledge/relationships.yaml` — engineering relationships
 - `knowledge/events.yaml` — injected events and evidence references
+- `knowledge/failure_modes.yaml` — diagnostic reference knowledge and limitations
 - `knowledge/query.py` — deterministic engineering queries
 - `model/physics.py` — pump physics
 - `model/capacity.py` — resilience calculations
 - `model/failure_simulation.py` — sequential failure simulation
 - `model/day2_summary.py` — deterministic scenario summary
+- `intelligence/evidence.py` — observable event-evidence extraction
+- `intelligence/diagnosis.py` — transparent hypothesis scoring
+- `intelligence/maintenance.py` — verification-plan generation
+- `intelligence/operations.py` — hydraulic/energy/resilience comparison
+- `intelligence/report.py` — deterministic Day-3 report
 - `tests/` — automated validation
 - `.github/workflows/validate.yml` — CI
 
@@ -197,6 +247,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 python knowledge/query.py
 python -m model.failure_simulation
+python -m intelligence.report
 pytest -q
 ```
 
