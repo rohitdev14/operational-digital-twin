@@ -1,0 +1,30 @@
+version: "0.1"
+purpose: day3_diagnostic_reference
+failure_modes:
+  - id: FM-BEARING-MECHANICAL-LOAD
+    component_class: bearing_or_rotating_assembly
+    hypothesis: mechanical_load_or_bearing_degradation
+    supporting_observations:
+      - increasing vibration before trip
+      - increasing electrical load at stable process demand
+      - overload trip may be consistent with increased mechanical load
+    verification:
+      - vibration spectrum and trend
+      - bearing temperature and lubrication condition
+      - coupling and mechanical freedom
+      - motor current
+    limitations:
+      - synthetic Day-2 signature is not a validated bearing diagnostic threshold
+  - id: FM-ELECTRICAL-SUPPLY-CABLE
+    component_class: cable_or_electrical_supply
+    hypothesis: electrical_supply_or_cable_fault
+    supporting_observations:
+      - electrical fault trip
+      - electrical excursion without material vibration precursor
+    verification:
+      - phase currents and voltages
+      - imbalance and protection records
+      - cable and termination inspection
+      - approved insulation or earth-fault checks
+    limitations:
+      - synthetic Day-2 signature does not identify a specific real cable failure mode
